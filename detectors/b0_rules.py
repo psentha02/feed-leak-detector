@@ -9,8 +9,9 @@ EXPECTED_COLUMNS = {
 ROW_DROP = 0.9   # alert when a file has under 90% of the usual rows
 
 
-def make_alert(day, cause, feed, stores=None, upcs=None, detail=""):
-    return {"file_date": day, "cause": cause, "feed": feed, "stores": stores, "upcs": upcs, "detail": detail}
+def make_alert(day, symptom, feed, stores=None, upcs=None, detail=""):
+    """A detector reports what it SAW (a symptom), never why. Diagnosis is a separate job."""
+    return {"file_date": day, "symptom": symptom, "feed": feed, "stores": stores, "upcs": upcs, "detail": detail}
 
 
 def run(feeds):
@@ -26,7 +27,7 @@ def run(feeds):
         for day in days[WARMUP_DAYS:]:
             usual = counts[day - pd.Timedelta(days=7):day - pd.Timedelta(days=1)].median()
             if counts[day] < ROW_DROP * usual:
-                alerts.append(make_alert(day, "dropped_stores", name, detail=f"{counts[day]} rows, usual {usual:.0f}"))
+                alerts.append(make_alert(day, "row_count_drop", name, detail=f"{counts[day]} rows, usual {usual:.0f}"))
             if newest[day] != day:
-                alerts.append(make_alert(day, "stale_file", name, detail=f"newest date in file is {newest[day].date()}"))
+                alerts.append(make_alert(day, "file_not_fresh", name, detail=f"newest date in file is {newest[day].date()}"))
     return {"alerts": alerts, "suppressions": []}

@@ -44,7 +44,7 @@ def test_build_is_repeatable():
 
 def test_scoring_matches_alerts_to_the_right_incident():
     feeds, labels = build("s2a")   # one stale-file incident
-    records, false_alerts, _ = score_scenario(labels, b0_rules.run(feeds), 90)
+    records, false_alerts, _ = score_scenario(labels, b0_rules.run(feeds), feeds)
     assert records[0]["alerted"] and records[0]["delay"] == 0 and records[0]["cause_ok"]
     assert false_alerts == 0
 
@@ -52,5 +52,5 @@ def test_scoring_matches_alerts_to_the_right_incident():
 def test_b1_stays_quiet_on_a_clean_promo_scenario():
     feeds, labels = build("s1b")   # large promo spike on the calendar
     result = b1_expected.run(feeds)
-    records, false_alerts, _ = score_scenario(labels, result, 90)
+    records, false_alerts, _ = score_scenario(labels, result, feeds)
     assert false_alerts == 0 and records[0]["suppressed_ok"]
