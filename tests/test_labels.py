@@ -8,14 +8,16 @@ LABEL_FIELDS = {"incident_id", "case", "start_date", "end_date", "affected",
                 "dollars_at_risk_per_day", "root_cause", "expected_evidence"}
 
 
-def test_twenty_scenarios_split_ten_and_ten():
-    assert len(TUNING) == 10 and len(TEST) == 10
+def test_thirty_scenarios_split_fifteen_and_fifteen():
+    assert len(TUNING) == 15 and len(TEST) == 15
     assert {SCENARIOS[n]["seed"] for n in TUNING} == {1, 2, 3, 4, 5}
-    assert {c["case"] for n in SCENARIOS for c in SCENARIOS[n]["incidents"]} == {1, 3, 4, 9, 12, 13, 17}
+    assert {c["case"] for n in SCENARIOS for c in SCENARIOS[n]["incidents"]} == {1, 2, 3, 4, 9, 12, 13, 14, 17}
+    for name in TEST:   # the test split covers each new case type too
+        assert SCENARIOS[name]["k"] == int(name[1:])
 
 
 def test_labels_match_specs_and_stay_out_of_the_feeds():
-    for name in ("s1a", "s3b", "s4b", "s5a"):
+    for name in ("s1a", "s3b", "s4b", "s5a", "s1c", "s3c", "s5c"):
         feeds, labels = build(name)
         assert len(labels) == len(SCENARIOS[name]["incidents"])
         assert all(set(l) == LABEL_FIELDS for l in labels)

@@ -30,6 +30,13 @@ SCENARIOS = {
     "s4b": {"seed": 4, "k": 1, "incidents": [_inc(1, 38, 3, n_stores=2), _inc(13, 65, 4, n_stores=1)]},
     "s5a": {"seed": 5, "k": 0, "incidents": [_inc(17, 52, 5, region="West", n_stores=3, n_products=3)]},
     "s5b": {"seed": 5, "k": 1, "incidents": [_inc(3, 70, 2), _inc(12, 45, 8, n_products=2, lift=3.0)]},
+    "s1c": {"seed": 1, "k": 2, "incidents": [_inc(2, 45, 4, n_stores=2)]},
+    "s2c": {"seed": 2, "k": 2, "incidents": [_inc(14, 50, 4, n_products=1, lift=4.0)]},
+    "s3c": {"seed": 3, "k": 2, "incidents": [_inc(4, 40, 4, n_stores=2, n_products=2),
+                                              _inc(2, 58, 6, n_stores=1)]},
+    "s4c": {"seed": 4, "k": 2, "incidents": [_inc(14, 42, 5, n_products=2), _inc(9, 62, 5, n_stores=2)]},
+    "s5c": {"seed": 5, "k": 2, "incidents": [_inc(14, 44, 4, n_products=1), _inc(13, 54, 3, n_stores=1),
+                                              _inc(2, 66, 3, n_stores=3)]},
     "t00": {"seed": 99, "k": 0, "incidents": [_inc(1, 44, 4, n_stores=2)]},
     "t01": {"seed": 99, "k": 1, "incidents": [_inc(1, 60, 6, n_stores=6)]},
     "t02": {"seed": 99, "k": 2, "incidents": [_inc(3, 50, 1)]},
@@ -41,6 +48,12 @@ SCENARIOS = {
     "t08": {"seed": 99, "k": 8, "incidents": [_inc(4, 36, 4, region="West", n_products=2),
                                                _inc(13, 68, 3, n_stores=2)]},
     "t09": {"seed": 99, "k": 9, "incidents": [_inc(9, 66, 7, n_stores=4), _inc(12, 42, 6, n_products=2)]},
+    # Added by case type only (Step 2b). Never built, printed or inspected while tuning.
+    "t10": {"seed": 99, "k": 10, "incidents": [_inc(2, 46, 4, n_stores=2)]},
+    "t11": {"seed": 99, "k": 11, "incidents": [_inc(14, 52, 5, n_products=1)]},
+    "t12": {"seed": 99, "k": 12, "incidents": [_inc(2, 52, 5, n_stores=1), _inc(13, 70, 3, n_stores=2)]},
+    "t13": {"seed": 99, "k": 13, "incidents": [_inc(14, 46, 4, n_products=2), _inc(3, 70, 2)]},
+    "t14": {"seed": 99, "k": 14, "incidents": [_inc(2, 40, 4, n_stores=3), _inc(14, 62, 4, n_products=1)]},
 }
 TUNING = [n for n, s in SCENARIOS.items() if s["seed"] != TEST_SEED]
 TEST = [n for n, s in SCENARIOS.items() if s["seed"] == TEST_SEED]
