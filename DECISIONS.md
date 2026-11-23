@@ -25,3 +25,11 @@ A product on the calendar is only a spike at 8x expected (promos reach about 5x)
 
 ## 8. First baseline run (tuning scenarios, no tuning done yet)
 B1 caught all 8 failures with 0 false alerts; B0 missed 5 of 8. This is suspiciously easy: the injected failures are large and the noise is plain Poisson (see DATA.md limits). Not tuned, not made harder. Open question for the Agent target "median days at half of B1": B1 is already at 0 days, so the target cannot be beaten on this data. Needs a decision before Step 3.
+
+## 9. Harder data (two separate changes, B0 and B1 code untouched)
+Why: B1 scored 100% with 0 false alerts on the first data (see #8).
+- **Change A, realism noise:** gamma-Poisson counts, store-day swings, weekly product drift, 0.3% random missing rows. Result: B1 unchanged (100% within 24h, 0.01 false alerts per week), B0 unchanged at 5 of 8 misses. Noise alone did not make it hard, because the incidents were huge. Shipped.
+- **Change B, smaller incidents in the tuning scenarios only:** cases 1, 4, 9 and 17 now touch 1 to 3 stores. Result: B0 misses 6 of 8 failures and detects 88% of dollars within 24h; B1 detects 99% within 24h, misses none, but needs 3 days on the 3-store unit change (s3a), because B1 judges product totals across 30 stores. Median days to detect is still 0 for B1. Shipped.
+- B1 was not re-tuned. The v0.1-baseline tag holds the easier numbers.
+- The 10 test scenarios keep their original footprints (not touched, not run). Open question: should they be made smaller too before Step 4, for a matching difficulty? That is a change to the test scenarios, so it needs your approval.
+- "Agent at half of B1" is still hard to beat while B1's median is 0. Probably the target should become a mean, or use only the small-footprint incidents. Open.

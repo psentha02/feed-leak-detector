@@ -18,16 +18,16 @@ def _inc(case, start, days, **params):
 
 # Tuning: seeds 1-5, two scenarios each. Test: seed 99, ten scenarios (not run until Step 4).
 SCENARIOS = {
-    "s1a": {"seed": 1, "k": 0, "incidents": [_inc(1, 42, 5, n_stores=4)]},
+    "s1a": {"seed": 1, "k": 0, "incidents": [_inc(1, 42, 5, n_stores=1)]},
     "s1b": {"seed": 1, "k": 1, "incidents": [_inc(12, 50, 7, n_products=2, lift=4.0)]},
     "s2a": {"seed": 2, "k": 0, "incidents": [_inc(3, 45, 3)]},
     "s2b": {"seed": 2, "k": 1, "incidents": [_inc(13, 55, 4, n_stores=2)]},
-    "s3a": {"seed": 3, "k": 0, "incidents": [_inc(4, 40, 5, region="East", n_products=4)]},
-    "s3b": {"seed": 3, "k": 1, "incidents": [_inc(4, 60, 4, region="West", n_products=3),
+    "s3a": {"seed": 3, "k": 0, "incidents": [_inc(4, 40, 5, n_stores=3, n_products=2)]},
+    "s3b": {"seed": 3, "k": 1, "incidents": [_inc(4, 60, 4, region="West", n_stores=2, n_products=2),
                                               _inc(12, 40, 7, n_products=2)]},
-    "s4a": {"seed": 4, "k": 0, "incidents": [_inc(9, 50, 6, n_stores=5)]},
+    "s4a": {"seed": 4, "k": 0, "incidents": [_inc(9, 50, 6, n_stores=2)]},
     "s4b": {"seed": 4, "k": 1, "incidents": [_inc(1, 38, 3, n_stores=2), _inc(13, 65, 4, n_stores=1)]},
-    "s5a": {"seed": 5, "k": 0, "incidents": [_inc(17, 52, 5, region="West", n_products=4)]},
+    "s5a": {"seed": 5, "k": 0, "incidents": [_inc(17, 52, 5, region="West", n_stores=3, n_products=3)]},
     "s5b": {"seed": 5, "k": 1, "incidents": [_inc(3, 70, 2), _inc(12, 45, 8, n_products=2, lift=3.0)]},
     "t00": {"seed": 99, "k": 0, "incidents": [_inc(1, 44, 4, n_stores=2)]},
     "t01": {"seed": 99, "k": 1, "incidents": [_inc(1, 60, 6, n_stores=6)]},
@@ -67,6 +67,8 @@ def build(name):
         if inc["case"] not in WORLD_CASES:
             world = apply(i, inc, world, truth)
     feeds = {k: world[k] for k in ("sales", "inventory", "master", "promo")}
+    gaps = np.random.default_rng([spec["seed"], spec["k"], 999]).random(len(feeds["sales"]))
+    feeds["sales"] = feeds["sales"][gaps >= profile["noise"]["row_dropout"]].reset_index(drop=True)
     return feeds, [labels[i] for i, _ in indexed]
 
 

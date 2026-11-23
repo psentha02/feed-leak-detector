@@ -16,3 +16,9 @@ packs:                                # 20 products in total
 base_promos: {count: 6, days: [7, 14], lift: [1.3, 2.0], products: [1, 3]}
 inventory: {par_weeks: 1.5, par_floor: 3, reorder_fraction: 0.4}
 notes: {rate: 0.01, benign: ["late scan", "price check", "damaged units written off"]}
+# Realism noise (placeholders). Poisson alone was too clean; see DECISIONS.md #9.
+noise:
+  dispersion: 4.0         # gamma-Poisson: variance = mean + mean^2 / dispersion (lower = noisier)
+  store_day_sd: 0.15      # whole-store good and bad days (log scale)
+  product_drift_sd: 0.05  # weekly random walk in each product's demand (log scale)
+  row_dropout: 0.003      # share of sales rows randomly missing from any file

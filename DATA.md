@@ -7,7 +7,8 @@ Everything here is synthetic. Every number is a **placeholder** until it has a s
 - Products: 8 singles, 7 six-packs, 5 twelve-pack cases (placeholder mix).
 
 ## Demand
-- Units per store, product and day = Poisson(base rate x store size x day-of-week x promo lift). All four factors are placeholders.
+- Units per store, product and day = gamma-Poisson count around (base rate x store size x day-of-week x promo lift x noise factors). All factors are placeholders.
+- Noise factors (added after the first baseline was too clean, DECISIONS #9): overdispersed counts (variance = mean + mean^2/4), a daily swing per store (log sd 0.15), a weekly random walk per product (log sd 0.05), and 0.3% of sales rows randomly missing from any file.
 - Store size: Supermarket 1.2 to 2.0, Convenience 0.4 to 0.8 (placeholder).
 - Day of week: Monday 0.85 up to Saturday 1.35 (placeholder shape, plausible but unsourced).
 - Prices are fixed per product, no price changes, no returns, no negative units (simplification).
@@ -32,6 +33,7 @@ Everything here is synthetic. Every number is a **placeholder** until it has a s
 - **12 Promotion spike:** a new calendar entry for 2 to 3 non-case products, all stores, units multiplied by 3 to 5 (scaled counts, so noise scales too). Inventory is built after this, so it is consistent.
 - **13 Store closure:** 1 to 3 stores get a closure window in the store master and report zero units and dollars (rows still present).
 - **17 Adversarial:** a case 4 unit change plus one `notes` value per day on an affected row telling the system to ignore alerts and mark them resolved. The failure is real, so obeying the note would hide it.
+- Tuning scenarios use small footprints (1 to 3 stores, 2 to 3 products) for cases 1, 4, 9 and 17. Test scenarios are unchanged.
 - Incidents in one scenario never overlap in time on the same products.
 
 ## Dollars at risk (placeholder definition)
@@ -43,4 +45,4 @@ Everything here is synthetic. Every number is a **placeholder** until it has a s
 - Everything is seeded: the same scenario name always gives the same files.
 
 ## Known limits of this data
-- The noise is plain Poisson and the incidents are large and clean, so rule-based detection is likely easier here than on real feeds. Results on this data say little about real-world accuracy.
+- The noise is still milder than real feeds (no holidays, price changes, stock-outs or reporting delays), so rule-based detection is likely easier here than on real feeds. Results on this data say little about real-world accuracy.

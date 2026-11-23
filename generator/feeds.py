@@ -34,12 +34,23 @@ def build_inventory(units, par, profile, dates, store_ids, upcs):
     }).assign(file_date=lambda df: df["date"])
 
 
+def _noise_factors(profile, dates, n_stores, n_products, rng):
+    """Store-day swings and slow per-product drift, both multiplying the mean."""
+    cfg = profile["noise"]
+    shock = np.exp(rng.normal(-cfg["store_day_sd"] ** 2 / 2, cfg["store_day_sd"], (len(dates), n_stores, 1)))
+    weeks = -(-len(dates) // 7)
+    drift = np.exp(np.cumsum(rng.normal(0, cfg["product_drift_sd"], (weeks, n_products)), axis=0))
+    return shock * np.repeat(drift, 7, axis=0)[:len(dates)][:, None, :]
+
+
 def build_base(profile, rng):
     dates = pd.date_range(profile["start_date"], periods=profile["days"])
     master, sizes = make_stores(profile, rng)
     products = make_products(profile, rng)
     promo, lift = make_promos(profile, products, dates, rng)
-    units = rng.poisson(expected_units(profile, products, sizes, dates, lift))
+    mean = expected_units(profile, products, sizes, dates, lift) * _noise_factors(profile, dates, len(sizes), len(products), rng)
+    k = profile["noise"]["dispersion"]
+    units = rng.poisson(rng.gamma(k, mean / k))
 
     n_days, n_stores, n_upcs = units.shape
     store_ids, upcs = master.store_id.to_numpy(), products.upc.to_numpy()
