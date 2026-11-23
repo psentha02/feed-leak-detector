@@ -33,3 +33,14 @@ Why: B1 scored 100% with 0 false alerts on the first data (see #8).
 - B1 was not re-tuned. The v0.1-baseline tag holds the easier numbers.
 - The 10 test scenarios keep their original footprints (not touched, not run). Open question: should they be made smaller too before Step 4, for a matching difficulty? That is a change to the test scenarios, so it needs your approval.
 - "Agent at half of B1" is still hard to beat while B1's median is 0. Probably the target should become a mean, or use only the small-footprint incidents. Open.
+
+## 10. Plan change: B1 is the answer key, so the Agent's job moves from detection to diagnosis and triage
+Finding (an honest result, not a failure): B1 passes every tuning case, and the cause is structural, not noise.
+- B1 has one detector per injector, written after the injectors, so it is the answer key.
+- B1's alert names equal the label `root_cause` names, so root-cause accuracy is 100% by construction.
+- The Agent is B1 plus a diagnoser, so it only sees what B1 flags. It cannot beat B1 on detection, so the target "Agent at half of B1 median days" is unreachable (B1 median is 0).
+- Lookalikes are explicit rows in the promo calendar or store master, so B1 just looks them up.
+Detection is not where an LLM adds value. Reading messy evidence and triaging alerts is. So: add cases where the symptom and the cause differ, add a text evidence source (notices), and re-centre the metrics on diagnosis and triage. B1's detection logic is not re-tuned to fix the new cases. Shipped (the following entries are the work).
+
+## 11. Bug fix: B1 grid wrote unknown store ids into the last store
+`_grid` used `get_indexer`, which returns -1 for ids not in the master, and -1 indexes the last column. Rows with an unknown store id (or product) overwrote store S30. Found while designing the store-remap case. Fix: drop rows with unknown ids before gridding. Regression test fails without the fix. B0 never builds a grid, so it is not affected. No existing result changes, since no existing scenario has unknown ids. Shipped.

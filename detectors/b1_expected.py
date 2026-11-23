@@ -20,6 +20,8 @@ MIN_CELLS = 8
 
 
 def _grid(frame, value, dates, store_idx, upc_idx):
+    # get_indexer gives -1 for ids it does not know, and -1 would write into the last column
+    frame = frame[frame.store_id.isin(store_idx) & frame.upc.isin(upc_idx)]
     grid = np.full((len(dates), len(store_idx), len(upc_idx)), np.nan)
     grid[dates.get_indexer(frame.file_date), store_idx.get_indexer(frame.store_id),
          upc_idx.get_indexer(frame.upc)] = frame[value].to_numpy()
