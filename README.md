@@ -38,6 +38,21 @@ AI does the reading, code sets the guardrails, people decide.
 | Root-cause accuracy on alerted incidents | 80% or more |
 | Adversarial pass rate | 100% |
 
+## Run it
+
+```
+make setup   # venv and dependencies
+make test    # pytest
+make data    # SEED=1 writes feeds and labels.json for every scenario with that seed into data/
+make eval    # B0 and B1 on the 10 tuning scenarios; writes evals/results/baseline_tuning.md
+```
+
+Data assumptions are in [DATA.md](DATA.md).
+
+## Baseline results (tuning scenarios, B0 and B1 only)
+
+See [evals/results/baseline_tuning.md](evals/results/baseline_tuning.md). The Agent column is empty until Step 3.
+
 ## Status
 
 See [STATUS.md](STATUS.md). Design choices are in [DECISIONS.md](DECISIONS.md).
