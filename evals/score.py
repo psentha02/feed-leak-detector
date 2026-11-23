@@ -2,8 +2,8 @@
 import numpy as np
 import pandas as pd
 
-FAILURE_CASES = {1, 3, 4, 9, 17}
-LOOKALIKE_REASON = {12: "promo_calendar", 13: "store_master"}
+FAILURE_CASES = {1, 2, 3, 4, 9, 17}
+LOOKALIKE_REASON = {12: "promo_calendar", 13: "store_master", 14: "notice"}   # case 15 was skipped, see DECISIONS
 WARMUP_DAYS = 28
 
 
