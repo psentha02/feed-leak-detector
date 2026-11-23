@@ -44,3 +44,28 @@ Detection is not where an LLM adds value. Reading messy evidence and triaging al
 
 ## 11. Bug fix: B1 grid wrote unknown store ids into the last store
 `_grid` used `get_indexer`, which returns -1 for ids not in the master, and -1 indexes the last column. Rows with an unknown store id (or product) overwrote store S30. Found while designing the store-remap case. Fix: drop rows with unknown ids before gridding. Regression test fails without the fix. B0 never builds a grid, so it is not affected. No existing result changes, since no existing scenario has unknown ids. Shipped.
+
+## 12. Notices feed, and cases 2 and 14, where symptom and cause differ
+What: a `notices` feed (id, date, optional store, optional product, free text) with 8 harmless distractors per scenario, so a notice existing is not a signal. Case 2 (store id remap, failure) and case 14 (unannounced display, lookalike) each add one real explanatory notice; labels cite its `notice_id` as expected evidence. Why: with only calendar and master lookups, B1 was the answer key. Now the cause is only readable from text. Existing scenarios stay byte-identical (golden hashes). Shipped.
+
+## 13. Detectors report symptoms; a scorer table maps symptom to cause
+What: alerts carry `symptom` (`stores_missing`, `units_spike`, `file_not_fresh`, `inventory_unchanged`, `row_count_drop`, `store_zero_sales`, `schema_change`), never a cause. `evals/score.py` holds the only symptom-to-cause table, so B1 earns root-cause credit only through an explicit rule ("stores missing means dropped stores"), not because two names match. The original tuning results are unchanged by the rename (golden test). Shipped.
+
+## 14. Case 15 (late backfill) skipped
+Backfilled rows would arrive in a later file carrying an older `date`, so they share a (file_date, store, product) key with that day's own rows. B1's grid would silently overwrite one with the other, and B0's freshness check reads the newest date per file. Showing it cleanly means changing detector logic, which this step forbids. Cut. `LOOKALIKE_REASON` has no entry for it.
+
+## 15. B1 threshold sweep (tuning scenarios only)
+B1 now takes `params`; defaults reproduce the old results exactly (golden test). Strict was fixed up front (spike 3.5, in-promo 10, low sales 0.2, min expected 30, frozen 0.92). Loose came from `evals/sweep.py` under a rule fixed before looking: lowest mean days to detect on small incidents, among settings with at most 10 false alerts a week, ties to fewer false alerts. Result: loose = spike 2.0, in-promo 6, min expected 10 (low sales 0.3, frozen 0.85 unchanged).
+What the sweep showed, 48 settings, 13 failures:
+- Speed saturates early. At spike 2.0 every failure is caught on day 0 at 0.16 false alerts a week. Spike 1.5 adds about 3.4 false alerts a week for no further speed. Raising low-sales from 0.3 to 0.5 costs about 1 more false alert a week for nothing.
+- The strict side does cost detection: B1-strict misses 3 of 13 failures (the small unit changes) and takes 4 days on the 17-case.
+- So the trade-off is real but lopsided here: tightening hurts detection, loosening beyond 2.0 only adds noise. The loose setting is therefore only mildly looser than default, and loose adds nothing the Agent can filter that default does not already alert on. The Agent's triage value on this data comes from the lookalikes and wrong causes, not from extra recall. Shipped as is.
+
+## 16. Targets replaced
+"Agent at half of B1 median days" is gone (unreachable, see #10). New: mean days to detect on small incidents (1 to 3 stores), Agent at or below B1; and false alerts per week at matched detection, 2 or fewer. "At matched detection" means compared with B1 set to the same detection rate. False alerts per week is averaged over 15 scenarios of about 9 weeks each, mostly incident-free, so it reads low (0.1 to 0.2) even though every case 14 day is a false alarm. Affected-set precision and recall are reported with no target. Shipped.
+
+## 17. Result of the harder cases (tuning scenarios, nothing tuned to fix them)
+- Root-cause accuracy drops from 100% to 77% for B1 (10 of 13): all three case 2 incidents are detected on day 0, name exactly the right (old) stores, and get the cause wrong (`stores_missing` maps to `dropped_stores`, the truth is `store_id_remap`).
+- Lookalike suppression drops to 67% (6 of 9): all three case 14 incidents are alerted as `units_spike`, because nothing in the feeds B1 reads explains them. Of B1's 15 false alert-days, 13 are inside case 14 windows; 2 are plain noise (one `store_zero_sales` in s2b, one `inventory_unchanged` in s4c).
+- B1 does badly at saying which stores: it names the products but not the stores for a unit spike, so store precision is 72% (65% loose).
+- B0 catches only 2 of 13 failures. Both detection and diagnosis headroom for the Agent is now measurable. Shipped.

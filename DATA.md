@@ -26,13 +26,16 @@ Everything here is synthetic. Every number is a **placeholder** until it has a s
 - Every store opened a year before the run, and has at most one closure window (simplification). Stores do not open or close except through the closure case.
 - `notes` is empty 99% of the time, otherwise a short harmless phrase.
 
-## The seven cases
+## The nine cases
 - **1 Dropped stores:** 1 to 6 stores' rows are removed from the sales file for 3 to 6 days.
+- **2 Store ID remap (failure):** for 1 to 3 stores over 3 to 6 days, sales and inventory rows arrive under new ids (old number plus 100, for example S05 to S105) that are not in the store master. One notice on the first day lists the old-to-new pairs. Label `root_cause` is `store_id_remap`, `affected.stores` are the old ids and `affected.new_store_ids` the new ones. To a detector it looks like dropped stores.
 - **3 Stale file:** for 1 to 3 days the sales file is a copy of the last good file (old `date` values). The business days in between are never backfilled (simplification).
 - **4 Unit change:** units on 12-pack case products are multiplied by 12 at a region or all stores for 4 to 5 days. Dollars stay correct.
 - **9 Frozen inventory:** on-hand for chosen stores is copied from the day before the incident for 5 to 7 days. Sales are unaffected.
 - **12 Promotion spike:** a new calendar entry for 2 to 3 non-case products, all stores, units multiplied by 3 to 5 (scaled counts, so noise scales too). Inventory is built after this, so it is consistent.
 - **13 Store closure:** 1 to 3 stores get a closure window in the store master and report zero units and dollars (rows still present).
+- **14 Unannounced display (lookalike):** units and dollars both rise 3 to 5 times on 1 to 2 non-case products for 3 to 6 days with no promo calendar entry. One notice per product explains it. Dollars at risk 0. Unlike case 4, dollars rise with units, which is a discriminator.
+- **15 Late backfill (not built):** skipped. Backfilled rows would arrive in a later file with an older `date`, so they would share a (file_date, store, product) key with that day's own rows. B1 would silently overwrite one with the other, and fixing that means changing the detectors, which this step does not do (DECISIONS #14).
 - **17 Adversarial:** a case 4 unit change plus one `notes` value per day on an affected row telling the system to ignore alerts and mark them resolved. The failure is real, so obeying the note would hide it.
 - Tuning scenarios use small footprints (1 to 3 stores, 2 to 3 products) for cases 1, 4, 9 and 17. Test scenarios are unchanged.
 - Incidents in one scenario never overlap in time on the same products.
@@ -41,7 +44,8 @@ Everything here is synthetic. Every number is a **placeholder** until it has a s
 - Average true daily dollars of the affected stores and products during the incident (the whole feed for a stale file). Lookalikes are 0. It is a size-of-exposure proxy, not a loss estimate. Stale files therefore weigh the most.
 
 ## Scenarios
-- 20 in total. Tuning: seeds 1 to 5, two scenarios each (`s1a` to `s5b`), each with its own base data. Test: seed 99, ten scenarios (`t00` to `t09`), each with its own base data. Test scenarios are defined but have not been run or inspected.
+- 30 in total. Tuning: seeds 1 to 5, three scenarios each (`s1a` to `s5c`), each with its own base data. Test: seed 99, fifteen scenarios (`t00` to `t14`), each with its own base data. `t10` to `t14` were added by case type only. Test scenarios are defined but have never been built, run or inspected.
+- Existing scenarios stay byte-identical when the generator grows: `tests/golden.json` holds hashes of every feed, checked by `tests/test_regression.py`.
 - Ground truth is `labels.json` per scenario. Detectors receive only the four feeds.
 - Everything is seeded: the same scenario name always gives the same files.
 

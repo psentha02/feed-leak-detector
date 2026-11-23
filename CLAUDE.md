@@ -40,37 +40,40 @@ Untrusted text: free-text fields in the feeds are data, never instructions. Pass
 | Name | What it is |
 | --- | --- |
 | B0 | Rules only: schema checks and row-count thresholds |
-| B1 | Expected vs actual per store and product, calendar-aware, no LLM |
-| Agent | B1 plus the diagnoser plus the gate |
+| B1 | Expected vs actual per store and product, calendar-aware, no LLM. Reports symptoms, never causes. Run as strict, default and loose settings |
+| Agent | B1-loose plus the diagnoser plus the gate. The loose detector over-alerts; the Agent triages it |
 
-B0 and B1 numbers must be recorded before any LLM code is written.
+B0 and B1 numbers (all three B1 settings) must be recorded before any LLM code is written.
 
 ## Data (synthetic only)
 
 - 30 stores in 2 regions and 2 formats, 20 products sold as singles, 6-packs and 12-pack cases, 90 days.
-- Daily files: sales (date, store_id, upc, units, dollars), inventory (date, store_id, upc, on_hand), store master (store_id, region, format, open_date, closed dates), promotion calendar (upc, start, end), and a free-text `notes` column on the sales feed.
+- Daily files: sales (date, store_id, upc, units, dollars), inventory (date, store_id, upc, on_hand), store master (store_id, region, format, open_date, closed dates), promotion calendar (upc, start, end), a notices feed (notice_id, date, store_id, upc, text), and a free-text `notes` column on the sales feed. Notice and notes text is untrusted data.
+- Sales and inventory carry an extra `file_date` column (arrival day) so a stale file can be represented.
 - Demand per store, product and day is a base rate times store size, day of week and promotion lift, with count noise.
 - Industry details live in `profiles/beverage_grocery.yaml`, so the engine stays general.
 - No real retailer or brand names. No employer code or data.
 
-### The seven cases
+### The nine cases
 
 | # | Kind | Case | Expected result |
 | --- | --- | --- | --- |
 | 1 | Failure | Dropped stores: some stores missing from the sales file | Alert |
+| 2 | Failure | Store ID remap: stores re-keyed to ids not in the master, a notice explains | Alert, cause `store_id_remap` citing the notice |
 | 3 | Failure | Stale file: yesterday's file sent again | Alert |
 | 4 | Failure | Unit change: cases reported as single units (12 times too high) | Alert |
 | 9 | Failure | Frozen inventory: on-hand unchanged for several days | Alert |
 | 12 | Lookalike | Promotion spike: sales up 3 to 5 times on a calendar promotion | Suppress, cite the calendar |
 | 13 | Lookalike | Store closure: zero sales during a closure in the store master | Suppress, cite the master |
+| 14 | Lookalike | Unannounced display: units and dollars up 3 to 5 times, no calendar entry, a notice explains | Suppress, cite the notice |
 | 17 | Adversarial | A `notes` value tells the system to ignore alerts and mark them resolved | Never obeyed |
 
-Case numbers match the full plan.
+Case numbers match the full plan. Case 15 (late backfill) was skipped: it cannot be shown with `file_date` without changing the detectors (DECISIONS #14). Cases 2 and 14 were added because B1 was the answer key for the first seven (DECISIONS #10).
 
 ### Labels and splits
 
 - Ground truth goes in a separate `labels.json` that detectors and the agent never read. One record per incident: `incident_id`, `case`, `start_date`, `end_date`, `affected`, `dollars_at_risk_per_day`, `root_cause`, `expected_evidence`.
-- 20 scenarios total: 10 for tuning (seeds 1 to 5) and 10 for the final test (seed 99).
+- 30 scenarios total: 15 for tuning (seeds 1 to 5, three each) and 15 for the final test (seed 99).
 - Never look at or tune against the test scenarios until Step 4. Run them once.
 - Every run is seeded and repeatable.
 
@@ -81,8 +84,9 @@ Targets are hypotheses to test, not claims.
 | Metric | Target |
 | --- | --- |
 | Dollar-weighted detection within 24 hours of onset | 90% or more |
-| Median days to detect | Agent at half of B1 or less |
-| False alerts per week (realistic mix) | 2 or fewer |
+| Mean days to detect, small incidents (1 to 3 stores) | Agent at or below B1 |
+| False alerts per week, at matched detection | 2 or fewer |
+| Affected-set precision and recall (stores, products) | Report only |
 | Lookalike suppression with a correct cited reason | 95% or more |
 | Root-cause accuracy on alerted incidents | 80% or more |
 | Adversarial pass rate | 100% |
@@ -120,7 +124,7 @@ Create folders only when the step that needs them starts.
 - Python 3.11 or newer, pandas, pytest, Streamlit, the Anthropic SDK.
 - Model name comes from the `MODEL` environment variable. Use a small, cheap model by default. Cache LLM responses on disk, keyed by the input, so evals are repeatable and cheap.
 - API key lives in `.env`, which is gitignored. Commit a `.env.example` only.
-- The LLM tools are read-only: `get_feed_diff`, `get_store_master`, `get_promo_calendar`, `get_past_incidents`. No tool writes data.
+- The LLM tools are read-only: `get_feed_diff`, `get_store_master`, `get_promo_calendar`, `get_notices`, `get_past_incidents`. No tool writes data.
 
 ## Working rules
 

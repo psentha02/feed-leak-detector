@@ -24,16 +24,16 @@ AI does the reading, code sets the guardrails, people decide.
 | Name | What it is |
 | --- | --- |
 | B0 | Rules only: schema checks and row-count thresholds |
-| B1 | Expected vs actual, calendar-aware, no LLM |
-| Agent | B1 plus the diagnoser plus the gate |
+| B1 | Expected vs actual, calendar-aware, no LLM. Strict, default and loose settings |
+| Agent | B1-loose plus the diagnoser plus the gate (it triages the over-sensitive detector) |
 
 ## Metric targets (hypotheses, not claims)
 
 | Metric | Target |
 | --- | --- |
 | Dollar-weighted detection within 24 hours of onset | 90% or more |
-| Median days to detect | Agent at half of B1 or less |
-| False alerts per week | 2 or fewer |
+| Mean days to detect, small incidents (1 to 3 stores) | Agent at or below B1 |
+| False alerts per week, at matched detection | 2 or fewer |
 | Lookalike suppression with a correct cited reason | 95% or more |
 | Root-cause accuracy on alerted incidents | 80% or more |
 | Adversarial pass rate | 100% |
@@ -44,14 +44,15 @@ AI does the reading, code sets the guardrails, people decide.
 make setup   # venv and dependencies
 make test    # pytest
 make data    # SEED=1 writes feeds and labels.json for every scenario with that seed into data/
-make eval    # B0 and B1 on the 10 tuning scenarios; writes evals/results/baseline_tuning.md
+make eval    # B0 and three B1 settings on the 15 tuning scenarios; writes evals/results/baseline_tuning.md
+python -m evals.sweep   # the B1 threshold sweep (tuning scenarios only)
 ```
 
 Data assumptions are in [DATA.md](DATA.md).
 
 ## Baseline results (tuning scenarios, B0 and B1 only)
 
-See [evals/results/baseline_tuning.md](evals/results/baseline_tuning.md). The Agent column is empty until Step 3.
+See [evals/results/baseline_tuning.md](evals/results/baseline_tuning.md). The Agent column is empty until Step 3. Short version: B1 detects almost everything, but names the wrong cause when stores are renumbered (case 2) and false-alarms on a display that only a notice explains (case 14). That is the gap the Agent is for (DECISIONS #10).
 
 ## Status
 
