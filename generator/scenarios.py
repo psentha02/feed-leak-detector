@@ -8,6 +8,7 @@ import numpy as np
 
 from generator.feeds import build_base, load_profile, with_inventory
 from generator.injectors import INJECTORS, WORLD_CASES
+from generator.notices import make_notices
 
 TEST_SEED = 99
 
@@ -49,6 +50,8 @@ def build(name):
     """Return ({sales, inventory, master, promo}, labels) for one scenario."""
     spec, profile = SCENARIOS[name], load_profile()
     world = build_base(profile, np.random.default_rng([spec["seed"], spec["k"]]))
+    world = {**world, "notices": make_notices(profile, world["master"], world["products"], world["dates"],
+                                             np.random.default_rng([spec["seed"], spec["k"], 998]))}
     labels = {}
 
     def apply(i, incident, world, truth):
@@ -66,7 +69,7 @@ def build(name):
     for i, inc in indexed:
         if inc["case"] not in WORLD_CASES:
             world = apply(i, inc, world, truth)
-    feeds = {k: world[k] for k in ("sales", "inventory", "master", "promo")}
+    feeds = {k: world[k] for k in ("sales", "inventory", "master", "promo", "notices")}
     gaps = np.random.default_rng([spec["seed"], spec["k"], 999]).random(len(feeds["sales"]))
     feeds["sales"] = feeds["sales"][gaps >= profile["noise"]["row_dropout"]].reset_index(drop=True)
     return feeds, [labels[i] for i, _ in indexed]

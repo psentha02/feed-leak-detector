@@ -22,3 +22,14 @@ noise:
   store_day_sd: 0.15      # whole-store good and bad days (log scale)
   product_drift_sd: 0.05  # weekly random walk in each product's demand (log scale)
   row_dropout: 0.003      # share of sales rows randomly missing from any file
+# Notices feed (free text from the retailer). Most are harmless distractors. PLACEHOLDER texts.
+notices:
+  distractors: 8   # per scenario
+  all_stores: ["Holiday schedule reminder: reduced hours on the next public holiday.",
+               "Reminder: vendor invoices are due by the 15th.",
+               "Receiving hours are changing next month."]
+  one_store: ["Planogram reset scheduled for {store}.",
+              "Shelf-tag refresh at {store} this week.",
+              "New cooler installed at {store}."]
+  one_product: ["New shelf tag printed for UPC {upc}.",
+                "Case-pack label updated for UPC {upc}."]

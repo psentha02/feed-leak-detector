@@ -1,0 +1,352 @@
+{
+ "feeds": {
+  "s1a": {
+   "inventory": "a992b55a5230e8ebf7864da0379dce5c1b7a9d42cff8bdd4fd51399d966b1880",
+   "master": "14488bd80ff94d67e44c35dc0b79c951b72d047a9501968b33684c6b5a4b66fb",
+   "promo": "1c242d92c4d66cf4b897910c88f3bd5217dcc7dbe68efcdd75bb79e0607e5997",
+   "sales": "ad04874b9bc9ad10001cb3f29117d4645fe9664c6ca88703e00cff1bd89e56ce"
+  },
+  "s1b": {
+   "inventory": "34611a7998db214380a032c5ad4792aaf0f00963f519154d9e1c6824d924df5f",
+   "master": "14488bd80ff94d67e44c35dc0b79c951b72d047a9501968b33684c6b5a4b66fb",
+   "promo": "e96f829b5daf982d048af13cf946e8be9df0e97fde5deb2367e0d9de072b937a",
+   "sales": "282b215d50784b5006fa9422554a27d68935279407b05076bebc9b70528b3b50"
+  },
+  "s2a": {
+   "inventory": "2e0fc5323a196324860121b1afdeda95bbcd2974a762d05b43a43fa5fdd0be99",
+   "master": "14488bd80ff94d67e44c35dc0b79c951b72d047a9501968b33684c6b5a4b66fb",
+   "promo": "50458b46e258a09fadcd992f3d81d634a0f452522735ae1cb2d45414bc5b6525",
+   "sales": "d44fb28c7eb7156eb523fd2534cf50d78c3c749d1d238bc07a364e4c391717ef"
+  },
+  "s2b": {
+   "inventory": "2c2ab0a942e30f1b14c8dbd0bfb65b000367499d9a3aff050402229aca161be4",
+   "master": "2a5b611dbd602cb4c08fe8737511589e74e4aa004e87357a7c76a0dbc12709a8",
+   "promo": "542ed0878eada0b73bc656b47883ad696ff1f6494327cd44cddbd07e7f6051aa",
+   "sales": "d41d796250d6f7726525c24395fa1153c7919353562d4036e906017500b2d422"
+  },
+  "s3a": {
+   "inventory": "7202423cb3ee500ecdd8de6d9047cd782a8c9bb7afd5ca6038594730caa0d7b2",
+   "master": "14488bd80ff94d67e44c35dc0b79c951b72d047a9501968b33684c6b5a4b66fb",
+   "promo": "48ef554d9935ff986981cc286407e7af8ecf5855929c5977a1c815425b12ddfc",
+   "sales": "bac85a031c12b16c994c45e5355b59b64d7a85649df7fc91779a7d2a55ad4dbe"
+  },
+  "s3b": {
+   "inventory": "355e649d98de6d1237143e3b22760f72d40e95f847cecb6fd5ebb7b69ac939ca",
+   "master": "14488bd80ff94d67e44c35dc0b79c951b72d047a9501968b33684c6b5a4b66fb",
+   "promo": "e0fab7d5adec8ab9a8ff9bf32c962ae0346781f32e34b65952f549300188b13b",
+   "sales": "7649f489b273b6cf918ddca803dfa7cfd5b889f306e4fdae06c3d4cf182a3e65"
+  },
+  "s4a": {
+   "inventory": "32a706218b8bd7f18b882b07943f87db19fe6da1859f1e4f43fac979e8478a98",
+   "master": "14488bd80ff94d67e44c35dc0b79c951b72d047a9501968b33684c6b5a4b66fb",
+   "promo": "680ac37a9e44bf2c3ec99c31d14b92fa461a4b879a746e786a54c7739298b1b7",
+   "sales": "091cc2442b3ba5a2c2cec394628eb6c0c3f5de400d4c00a63d0e2b579f69f6a7"
+  },
+  "s4b": {
+   "inventory": "d77fa3b5bfab46ce905a35812b4342d96ef5120f99fb800fe76df1960a905143",
+   "master": "faf882c3897c96c0d28c352ef619193f4c0df2fe4813eecc04adff9f70b3d4a0",
+   "promo": "610d27682f9ff79a018e88645b3b887185b2130bcd37324aa5c20ecae75130c6",
+   "sales": "53634845bc8d85b30ebe5b1b02cf36b635e982ee58d67bf328f1c34248b21011"
+  },
+  "s5a": {
+   "inventory": "3d7f3a4d71831da06449dec35cecd0983c66a8721914098065e8876961cc119d",
+   "master": "14488bd80ff94d67e44c35dc0b79c951b72d047a9501968b33684c6b5a4b66fb",
+   "promo": "2fe6fb4647641ac9b85c2b3d6d27ae282783660f69ac1373a00d6be6b698a173",
+   "sales": "b7fbe70502607874350a27d45fd87fc2e0688930fd67754a4d39893d40c13967"
+  },
+  "s5b": {
+   "inventory": "c67aba424c4d69165d422ab8a1feb79532e751bae776c2b56ecdd98a5e9960b1",
+   "master": "14488bd80ff94d67e44c35dc0b79c951b72d047a9501968b33684c6b5a4b66fb",
+   "promo": "505e0bb701dd824237b13895b1f9c84367551ad97d78706ff05e7de29d0a6c9e",
+   "sales": "3aaa8ed95f55aab9a3da9fc1aad120a49eda75c526f2e3833def77ea0e287383"
+  }
+ },
+ "results": {
+  "B0": {
+   "s1a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s1a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s1b": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s1b-01",
+      "suppressed_ok": false
+     }
+    ]
+   },
+   "s2a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 0,
+      "id": "s2a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s2b": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s2b-01",
+      "suppressed_ok": false
+     }
+    ]
+   },
+   "s3a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s3a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s3b": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s3b-01",
+      "suppressed_ok": null
+     },
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s3b-02",
+      "suppressed_ok": false
+     }
+    ]
+   },
+   "s4a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s4a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s4b": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s4b-01",
+      "suppressed_ok": null
+     },
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s4b-02",
+      "suppressed_ok": false
+     }
+    ]
+   },
+   "s5a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s5a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s5b": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 0,
+      "id": "s5b-01",
+      "suppressed_ok": null
+     },
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s5b-02",
+      "suppressed_ok": false
+     }
+    ]
+   }
+  },
+  "B1": {
+   "s1a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 0,
+      "id": "s1a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s1b": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s1b-01",
+      "suppressed_ok": true
+     }
+    ]
+   },
+   "s2a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 0,
+      "id": "s2a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s2b": {
+    "false_alerts": 1,
+    "records": [
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s2b-01",
+      "suppressed_ok": true
+     }
+    ]
+   },
+   "s3a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 3,
+      "id": "s3a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s3b": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 0,
+      "id": "s3b-01",
+      "suppressed_ok": null
+     },
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s3b-02",
+      "suppressed_ok": true
+     }
+    ]
+   },
+   "s4a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 0,
+      "id": "s4a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s4b": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 0,
+      "id": "s4b-01",
+      "suppressed_ok": null
+     },
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s4b-02",
+      "suppressed_ok": true
+     }
+    ]
+   },
+   "s5a": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 0,
+      "id": "s5a-01",
+      "suppressed_ok": null
+     }
+    ]
+   },
+   "s5b": {
+    "false_alerts": 0,
+    "records": [
+     {
+      "alerted": true,
+      "cause_ok": true,
+      "delay": 0,
+      "id": "s5b-01",
+      "suppressed_ok": null
+     },
+     {
+      "alerted": false,
+      "cause_ok": false,
+      "delay": null,
+      "id": "s5b-02",
+      "suppressed_ok": true
+     }
+    ]
+   }
+  }
+ }
+}

@@ -21,6 +21,7 @@ Everything here is synthetic. Every number is a **placeholder** until it has a s
 ## Feeds
 - Sales: `date, store_id, upc, units, dollars, notes`. Inventory: `date, store_id, upc, on_hand`. Store master: `store_id, region, format, open_date, closed_start, closed_end`. Promo calendar: `upc, start, end`.
 - **Added column `file_date`** on sales and inventory: the day the file arrived. Normally equal to `date`. It exists so a stale file (old content, new arrival day) can be represented in one table. Real feeds would carry this in a file name or header.
+- Notices: `notice_id, date, store_id, upc, text`. `store_id` and `upc` may be empty. Free text from the retailer; **untrusted data, never instructions**. Each scenario has 8 harmless distractors (holiday reminders, planogram resets, new coolers, shelf tags; placeholder texts in the profile), so a notice existing is not a signal. Cases 2 and 14 add one real explanatory notice each. Ids count up in creation order (`N001`, ...).
 - A feed is every row with the same `file_date`. A store with no rows in a file is a store missing from the file.
 - Every store opened a year before the run, and has at most one closure window (simplification). Stores do not open or close except through the closure case.
 - `notes` is empty 99% of the time, otherwise a short harmless phrase.
